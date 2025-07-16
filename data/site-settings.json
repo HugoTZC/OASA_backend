@@ -1,0 +1,18 @@
+{
+  "banner_slogan": "La tienda de los expertos",
+  "banner_contact": "656-123-4567",
+  "banner_enabled": true,
+  "primary_color": "#1e40af",
+  "secondary_color": "#3b82f6",
+  "accent_color": "#fbbf24",
+  "text_color": "#111827",
+  "background_color": "#ffffff",
+  "company_name": "OASA Industrial",
+  "company_email": "contacto@oasa.com",
+  "company_phone": "656-123-4567",
+  "company_address": "Av. Ejemplo 123, Ciudad Juarez",
+  "facebook_url": "",
+  "twitter_url": "",
+  "instagram_url": "",
+  "linkedin_url": ""
+}
