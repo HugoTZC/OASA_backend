@@ -50,15 +50,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
 app.get('/api/test', (req, res) => {
   res.json({ ok: true, message: "Backend funcionando correctamente en Render" });
 });
 
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 OASA Backend API running on port ${PORT}`);
