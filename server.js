@@ -55,6 +55,11 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+app.get('/api/test', (req, res) => {
+  res.json({ ok: true, message: "Backend funcionando correctamente en Render" });
+});
+
+
 app.listen(PORT, () => {
   console.log(`🚀 OASA Backend API running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
