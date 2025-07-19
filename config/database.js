@@ -8,8 +8,8 @@ const pool = new Pool({
   database: process.env.DATABASE_URL ? undefined : process.env.DB_NAME,
   password: process.env.DATABASE_URL ? undefined : process.env.DB_PASSWORD,
   port: process.env.DATABASE_URL ? undefined : process.env.DB_PORT,
-  // SSL configuration for production
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  // SSL configuration - force SSL when using DATABASE_URL (Render) or when NODE_ENV is production
+  ssl: process.env.DATABASE_URL || process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   // Connection pool settings
   max: 20,
   idleTimeoutMillis: 30000,
