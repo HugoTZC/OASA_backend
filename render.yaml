@@ -1,0 +1,33 @@
+version: 1
+services:
+  - type: web
+    name: oasa-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_URL
+        value: https://your-vercel-app-name.vercel.app
+      - key: JWT_SECRET
+        generateValue: true
+      - key: BCRYPT_ROUNDS
+        value: 12
+      - key: DEFAULT_SUBSCRIPTION_PLAN
+        value: basic
+      - key: LOG_LEVEL
+        value: info
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+databases:
+  - name: oasa-postgres
+    plan: free
+    databaseName: OASA
+    user: oasa_user
