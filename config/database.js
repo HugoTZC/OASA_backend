@@ -1,11 +1,15 @@
 const { Pool } = require('pg');
 
+// Use DATABASE_URL for production (Render) or individual vars for local development
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL || undefined,
+  user: process.env.DATABASE_URL ? undefined : process.env.DB_USER,
+  host: process.env.DATABASE_URL ? undefined : process.env.DB_HOST,
+  database: process.env.DATABASE_URL ? undefined : process.env.DB_NAME,
+  password: process.env.DATABASE_URL ? undefined : process.env.DB_PASSWORD,
+  port: process.env.DATABASE_URL ? undefined : process.env.DB_PORT,
+  // SSL configuration for production
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   // Connection pool settings
   max: 20,
   idleTimeoutMillis: 30000,
