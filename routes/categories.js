@@ -4,12 +4,11 @@ const db = require('../config/database');
 
 router.get('/', async (req, res) => {
   try {
-    const query = `SELECT category, COUNT(*) as product_count 
-FROM products 
-WHERE category IS NOT NULL AND category != '' 
-GROUP BY category 
-ORDER BY product_count DESC 
-LIMIT 5`;
+    const query = `SELECT category, COUNT(*) as product_count
+FROM products
+WHERE category IS NOT NULL AND category != ''
+GROUP BY category
+ORDER BY product_count DESC`;
     const result = await db.query(query);
 
     const categories = result.rows.map(row => ({

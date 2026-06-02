@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
   try {
     const { category, search, hierarchy, sortBy = 'name', sortOrder = 'asc' } = req.query;
 
-    let query = `SELECT * FROM products WHERE 1=1`;
+    let query = `SELECT * FROM products WHERE hierarchy IS NOT NULL AND hierarchy != 3`;
     const params = [];
     let paramIndex = 1;
 
@@ -33,12 +33,12 @@ router.get('/', async (req, res) => {
     const validSortOrders = ['asc', 'desc'];
 
     if (validSortFields.includes(sortBy) && validSortOrders.includes(sortOrder.toLowerCase())) {
-      query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
+      query += ` ORDER BY hierarchy ASC, ${sortBy} ${sortOrder.toUpperCase()}`;
     } else {
-      query += ` ORDER BY name ASC`;
+      query += ` ORDER BY hierarchy ASC, name ASC`;
     }
 
-    query += ` LIMIT 100`;
+    query += ` LIMIT 200`;
 
     const result = await db.query(query, params);
 
