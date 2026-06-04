@@ -68,6 +68,9 @@ app.use('/api/subscriptions', require('./routes/subscriptions'));
 app.use('/api/db-admin', require('./routes/db-admin'));
 app.use('/api/images', require('./routes/images'));
 
+// Serve product images as static files
+app.use('/images', express.static('/Users/hugomeza/Dev Projects/oasaimages'));
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

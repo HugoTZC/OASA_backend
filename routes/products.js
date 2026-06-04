@@ -42,18 +42,21 @@ router.get('/', async (req, res) => {
 
     const result = await db.query(query, params);
 
-    const products = result.rows.map(row => ({
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      category: row.category || 'Sin categoría',
-      imagepath: row.imagepath,
-      hierarchy: row.hierarchy,
-      sku: row.sku,
-      isFeatured: row.hierarchy === 1,
-      isNew: row.hierarchy === 2,
-      isHighlighted: row.hierarchy === 3
-    }));
+    const products = result.rows.map(row => {
+      const filename = row.imagepath ? row.imagepath.split('/').pop() : null;
+      return {
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        category: row.category || 'Sin categoría',
+        imagepath: filename ? `/images/${filename}` : null,
+        hierarchy: row.hierarchy,
+        sku: row.sku,
+        isFeatured: row.hierarchy === 1,
+        isNew: row.hierarchy === 2,
+        isHighlighted: row.hierarchy === 3
+      };
+    });
 
     res.json({
       products,
@@ -82,12 +85,13 @@ router.get('/:id', async (req, res) => {
 
     const row = result.rows[0];
 
+    const filename = row.imagepath ? row.imagepath.split('/').pop() : null;
     const product = {
       id: row.id,
       name: row.name,
       description: row.description,
       category: row.category || 'Sin categoría',
-      imagepath: row.imagepath,
+      imagepath: filename ? `/images/${filename}` : null,
       hierarchy: row.hierarchy,
       sku: row.sku,
       isFeatured: row.hierarchy === 1,
