@@ -7,38 +7,34 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(helmet());
-
 // CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://localhost:3002',
-  'http://localhost:3003',
+  'https://localhost:3000',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
-// Log CORS configuration in development
-if (process.env.NODE_ENV !== 'production') {
-  console.log('🌐 CORS allowed origins:', allowedOrigins);
-}
+// Manual CORS middleware to ensure headers are not stripped by proxies (e.g., ngrok)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  }
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  next();
+});
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn('🚫 CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Disable the cors package to avoid double-header conflicts
+// app.use(cors({ origin: true, credentials: true }));
+
+// Other middleware
+// app.use(helmet()); // Disabled for CORS testing
 app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -49,11 +45,7 @@ app.get('/health', (req, res) => {
     status: 'OK', 
     timestamp: new Date().toISOString(),
     service: 'OASA Backend API',
-    environment: process.env.NODE_ENV || 'development',
-    cors: {
-      allowedOrigins: allowedOrigins,
-      requestOrigin: req.get('origin') || 'no-origin'
-    }
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
